@@ -1,3 +1,5 @@
+@Library('jenkins-shared-library') _
+
 pipeline {
     parameters {
         choice(name: 'SERVICE_NAME', choices: ['hrs-wld-requestor', 'hrs-wld-responder', 'hrs-hazelcast-server', 'hrs-monitoring-service', 'hrs-netprobe-service'], description: 'Select the component to build and deploy')
@@ -12,12 +14,14 @@ pipeline {
     }
     stages {
         stage ('checkout') {
-            withCredentialsWrapper(env.JENKINS_CREDENTIALS_ID) {
-                gitCheckout(
-                    serviceName: params.SERVICE_NAME
-                    branchName: '*/develop'
-                    credentialsId: env.JENKINS_CREDENTIALS_ID
-                )
+            steps {
+                withCredentialsWrapper(env.JENKINS_CREDENTIALS_ID) {
+                    gitCheckout(
+                        serviceName: params.SERVICE_NAME,
+                        branchName: '*/develop',
+                        credentialsId: env.JENKINS_CREDENTIALS_ID
+                    )
+                }
             }
         }
     }
