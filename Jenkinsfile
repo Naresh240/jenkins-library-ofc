@@ -89,6 +89,15 @@ pipeline {
                 }
             }
         }
+        stage('check for change') {
+            steps {
+                withCredentialsClosure(env.JENKINS_CREDENTIALS_ID) { username, password -> 
+                    def changes = checkChanges()
+                    CODE_CHANGED = changes.codeChanged
+                    CONFIG_CHANGED = changes.configChanged
+                }
+            }
+        }
         stage('Check for Image Tag') {
             steps {
                 script {
